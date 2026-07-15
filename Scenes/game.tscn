@@ -1,0 +1,60 @@
+[gd_scene format=3 uid="uid://b32euooeepj63"]
+
+[ext_resource type="Script" uid="uid://c1he2t7rugk8k" path="res://Scripts/game.gd" id="1_ebmjs"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ebmjs"]
+size = Vector3(100, 1, 100)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qxrlw"]
+size = Vector3(100, 1, 100)
+
+[node name="game" type="Node3D" unique_id=1293817836]
+script = ExtResource("1_ebmjs")
+
+[node name="world" type="Node3D" parent="." unique_id=320021232]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="world" unique_id=1839776638]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="world/StaticBody3D" unique_id=689972995]
+shape = SubResource("BoxShape3D_ebmjs")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="world/StaticBody3D" unique_id=1905676423]
+mesh = SubResource("BoxMesh_qxrlw")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=507643995]
+transform = Transform3D(1, 0, 0, 0, 0.84733516, 0.5310585, 0, -0.5310585, 0.84733516, 0, 33.112335, 38.1262)
+
+[node name="spawnpoint" type="Node3D" parent="." unique_id=179447209]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.0776205, 33.121735)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1264728325]
+
+[node name="host" type="Button" parent="CanvasLayer" unique_id=841894334]
+offset_left = 18.0
+offset_top = 18.0
+offset_right = 79.0
+offset_bottom = 49.0
+text = "HOST"
+
+[node name="start" type="Button" parent="CanvasLayer" unique_id=182554072]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -4.0
+offset_right = 4.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "START"
+
+[node name="waiting" type="Label" parent="CanvasLayer" unique_id=1668128139]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="players" type="Node3D" parent="." unique_id=1928004491]
+
+[connection signal="pressed" from="CanvasLayer/host" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/start" to="." method="_on_start_pressed"]
