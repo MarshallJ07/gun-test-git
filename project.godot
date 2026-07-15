@@ -62,7 +62,7 @@ renderer/rendering_method.mobile="gl_compatibility"
 
 [steam]
 
-initialization/app_data/app_type=2
+initialization/app_data/app_type=0
 initialization/app_data/app_id=480
 initialization/app_data/demo_id=480
 initialization/app_data/playtest_id=480
