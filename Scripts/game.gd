@@ -29,11 +29,16 @@ func _on_button_pressed() -> void:
 
 
 func _on_start_pressed() -> void:
-	$CanvasLayer/host.hide()
-	$CanvasLayer/start.hide()
 	if !multiplayer.is_server():
 		return
 	spawn_player.rpc(multiplayer.get_unique_id())
+	hide_buttons.rpc()
+	
+@rpc("any_peer","call_local","reliable")
+func hide_buttons() -> void:
+	$CanvasLayer/host.hide()
+	$CanvasLayer/start.hide()
+	
 	
 func initialize_player(player:CharacterBody3D):
 
