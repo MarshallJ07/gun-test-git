@@ -68,15 +68,15 @@ func spawn_player(peer_id:int):
 	player.shoot_requested.connect(_on_player_shoot_requested)
 	
 	
-func _on_player_shoot_requested(playerTransform: Transform3D, cameraTransform: Transform3D):
-	spawn_bullet_everywhere.rpc(playerTransform, cameraTransform)
+func _on_player_shoot_requested(playerTransform: Transform3D, cameraTransform: Transform3D, peer_id: int):
+	spawn_bullet_everywhere.rpc(playerTransform, cameraTransform, peer_id)
 	
 @rpc("authority","call_local","reliable")
-func spawn_bullet_everywhere(playerTransform: Transform3D, cameraTransform: Transform3D) -> void:
-	print(rad_to_deg(cameraTransform.basis.get_euler().y))
+func spawn_bullet_everywhere(playerTransform: Transform3D, cameraTransform: Transform3D, peer_id: int) -> void:
 	var bullet = preload("res://Scenes/bullet.tscn").instantiate()
 	bullet.set_multiplayer_authority(1)
 	bullet.global_transform = playerTransform
+	bullet.id = peer_id
 	$bullets.add_child(bullet)
 	var direction = -playerTransform.basis.z
 	direction.y = -cameraTransform.basis.z.y

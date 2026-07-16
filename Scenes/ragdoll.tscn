@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://du7sr352qonrg"]
+
+[ext_resource type="Script" uid="uid://m3ivi6spn5vj" path="res://Scripts/ragdoll.gd" id="1_1d85k"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hgmv7"]
+albedo_color = Color(0.91806, 0.575202, 0.222449, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_1d85k"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_222jj"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_hgmv7"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[node name="ragdoll" type="RigidBody3D" unique_id=498367769]
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("1_1d85k")
+
+[node name="Mesh" type="MeshInstance3D" parent="." unique_id=411522898]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+material_override = SubResource("StandardMaterial3D_hgmv7")
+cast_shadow = 0
+mesh = SubResource("CapsuleMesh_1d85k")
+
+[node name="Collider" type="CollisionShape3D" parent="." unique_id=827632494]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_222jj")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1034684862]
+replication_config = SubResource("SceneReplicationConfig_hgmv7")
+
+[node name="Timer" type="Timer" parent="." unique_id=531958131]
+wait_time = 0.1
+one_shot = true

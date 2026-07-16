@@ -1,11 +1,10 @@
 [gd_scene format=3 uid="uid://diio404vcj34x"]
 
+[ext_resource type="Script" uid="uid://bpvej2vwxtyk0" path="res://Scripts/bullet.gd" id="1_xjght"]
+
 [sub_resource type="SphereMesh" id="SphereMesh_4mw4s"]
-radius = 0.2
-height = 0.4
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_xjght"]
-radius = 0.2
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_oduel"]
 properties/0/path = NodePath(".:position")
@@ -15,9 +14,20 @@ properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_oduel"]
+radius = 0.6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xjght"]
+albedo_color = Color(0.4039033, 7.6407565e-07, 2.4065375e-08, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_oduel"]
+material = SubResource("StandardMaterial3D_xjght")
+
 [node name="bullet" type="RigidBody3D" unique_id=1582793242]
 collision_layer = 2
 collision_mask = 2
+continuous_cd = true
+script = ExtResource("1_xjght")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=191636864]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.725, 0)
@@ -29,3 +39,31 @@ shape = SubResource("SphereShape3D_xjght")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1251862604]
 replication_config = SubResource("SceneReplicationConfig_oduel")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=503811776]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1245240544]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.725, 0)
+shape = SubResource("SphereShape3D_oduel")
+
+[node name="particles" type="CPUParticles3D" parent="." unique_id=1323616699]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.725, 0)
+emitting = false
+amount = 256
+one_shot = true
+explosiveness = 1.0
+mesh = SubResource("BoxMesh_oduel")
+direction = Vector3(1, 1, 1)
+spread = 180.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 5.0
+initial_velocity_max = 15.0
+linear_accel_min = -15.0
+linear_accel_max = -10.0
+scale_amount_min = 0.2
+scale_amount_max = 0.4
+
+[connection signal="area_entered" from="Area3D" to="." method="_on_area_3d_area_entered"]
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

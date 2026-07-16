@@ -5,7 +5,7 @@
 
 extends CharacterBody3D
 
-signal shoot_requested(transform)
+signal shoot_requested()
 
 
 
@@ -108,7 +108,7 @@ func _physics_process(delta: float) -> void:
 		if Input.is_action_just_pressed(input_jump) and is_on_floor():
 			velocity.y = jump_velocity
 	if Input.is_action_just_pressed(input_shoot):
-		shoot.rpc_id(1, global_transform, $Head/Camera3D.global_transform)
+		shoot.rpc_id(1, global_transform, $Head/Camera3D.global_transform, name.to_int())
 	# Modify speed based on sprinting
 	if can_sprint and Input.is_action_pressed(input_sprint):
 			move_speed = sprint_speed
@@ -192,9 +192,8 @@ func check_input_mappings():
 		can_freefly = false
 		
 @rpc("any_peer","call_local","reliable")
-func shoot(playerTransform: Transform3D, cameraTransform: Transform3D) -> void:
-	shoot_requested.emit(playerTransform, cameraTransform)
-	print(1)
+func shoot(playerTransform: Transform3D, cameraTransform: Transform3D, peer_id: int) -> void:
+	shoot_requested.emit(playerTransform, cameraTransform, peer_id)
 	
 
 	
