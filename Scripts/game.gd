@@ -73,6 +73,7 @@ func _on_player_shoot_requested(playerTransform: Transform3D, cameraTransform: T
 	
 @rpc("authority","call_local","reliable")
 func spawn_bullet_everywhere(playerTransform: Transform3D, cameraTransform: Transform3D) -> void:
+	print(rad_to_deg(cameraTransform.basis.get_euler().y))
 	var bullet = preload("res://Scenes/bullet.tscn").instantiate()
 	bullet.set_multiplayer_authority(1)
 	bullet.global_transform = playerTransform
