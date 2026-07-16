@@ -69,7 +69,7 @@ func spawn_player(peer_id:int):
 	
 	
 func _on_player_shoot_requested(playerTransform: Transform3D, cameraTransform: Transform3D):
-	spawn_bullet_everywhere(playerTransform, cameraTransform)
+	spawn_bullet_everywhere.rpc(playerTransform, cameraTransform)
 	
 @rpc("authority","call_local","reliable")
 func spawn_bullet_everywhere(playerTransform: Transform3D, cameraTransform: Transform3D) -> void:
