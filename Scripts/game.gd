@@ -10,7 +10,7 @@ var players: Array[CharacterBody3D]
 
 
 
-
+var ids = []
 
 func _ready():
 	Networking.host_created.connect(_on_host_created)
@@ -20,7 +20,7 @@ func _on_host_created():
 	pass
 	
 func _peer_connected(peer_id:int):
-	pass
+	ids.append(peer_id)
 
 
 func _on_button_pressed() -> void:
@@ -32,6 +32,8 @@ func _on_start_pressed() -> void:
 	if !multiplayer.is_server():
 		return
 	spawn_player.rpc(multiplayer.get_unique_id())
+	for id in ids:
+		spawn_player.rpc(id)
 	hide_buttons.rpc()
 	
 @rpc("any_peer","call_local","reliable")
@@ -56,5 +58,6 @@ func spawn_player(peer_id:int):
 	var player := PROTO_CONTROLLER.instantiate()
 	player.name = str(peer_id)
 	player.set_multiplayer_authority(peer_id)
+	print(peer_id)
 	$players.add_child(player)
 	initialize_player(player)
