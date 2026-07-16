@@ -13,14 +13,17 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 		return
 	if body.name.to_int() != id and body.name != $".".name:
 		explode_everywhere.rpc(id)
-		$particles.restart()
-		$CollisionShape3D.queue_free()
-		$MeshInstance3D.queue_free()
-		$Area3D.queue_free()
+		
+		
+		
 @rpc("any_peer", "call_local", "reliable")
 func explode_everywhere(peer_id) -> void:
 	if id == peer_id:
 		if is_multiplayer_authority():
+			$particles.restart()
+			$CollisionShape3D.queue_free()
+			$MeshInstance3D.queue_free()
+			$Area3D.queue_free()
 			check_player_collisions.rpc_id(1,id)
 
 
