@@ -12,8 +12,7 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 	if not is_multiplayer_authority():
 		return
 	if body.name.to_int() != id and body.name != $".".name:
-		explode_everywhere.rpc(id)
-		print(1)
+		explode_everywhere.rpc(body.name.to_int())
 		
 		
 @rpc("any_peer", "call_local", "reliable")
