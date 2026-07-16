@@ -58,7 +58,7 @@ func spawn_player(peer_id:int):
 	var player := PROTO_CONTROLLER.instantiate()
 	player.name = str(peer_id)
 	player.set_multiplayer_authority(peer_id)
-	if is_multiplayer_authority():
+	if peer_id == multiplayer.get_unique_id():
 		player.get_node("Head").get_child(0).current = true
 	$players.add_child(player)
 	initialize_player(player)
