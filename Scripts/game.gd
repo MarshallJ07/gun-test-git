@@ -59,6 +59,6 @@ func spawn_player(peer_id:int):
 	player.name = str(peer_id)
 	player.set_multiplayer_authority(peer_id)
 	if is_multiplayer_authority():
-		player.get_node("head").get_child(0).make_current
+		player.get_node("Head").get_child(0).make_current
 	$players.add_child(player)
 	initialize_player(player)
