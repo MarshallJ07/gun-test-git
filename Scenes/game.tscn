@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b32euooeepj63"]
 
 [ext_resource type="Script" uid="uid://c1he2t7rugk8k" path="res://Scripts/game.gd" id="1_ebmjs"]
+[ext_resource type="Script" uid="uid://cg83coospv55e" path="res://Scripts/bullets.gd" id="2_qxrlw"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ebmjs"]
 size = Vector3(100, 1, 100)
@@ -14,6 +15,8 @@ script = ExtResource("1_ebmjs")
 [node name="world" type="Node3D" parent="." unique_id=320021232]
 
 [node name="StaticBody3D" type="StaticBody3D" parent="world" unique_id=1839776638]
+collision_layer = 3
+collision_mask = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="world/StaticBody3D" unique_id=689972995]
 shape = SubResource("BoxShape3D_ebmjs")
@@ -55,6 +58,9 @@ offset_right = 40.0
 offset_bottom = 23.0
 
 [node name="players" type="Node3D" parent="." unique_id=1928004491]
+
+[node name="bullets" type="Node3D" parent="." unique_id=756830785]
+script = ExtResource("2_qxrlw")
 
 [connection signal="pressed" from="CanvasLayer/host" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/start" to="." method="_on_start_pressed"]

@@ -16,6 +16,9 @@ func _ready():
 	Networking.host_created.connect(_on_host_created)
 	multiplayer.peer_connected.connect(_peer_connected)
 	
+	
+	
+	
 func _on_host_created():
 	pass
 	
@@ -62,3 +65,19 @@ func spawn_player(peer_id:int):
 		player.get_node("Head").get_child(0).current = true
 	$players.add_child(player)
 	initialize_player(player)
+	player.shoot_requested.connect(_on_player_shoot_requested)
+	
+	
+func _on_player_shoot_requested(playerTransform: Transform3D, cameraTransform: Transform3D):
+	spawn_bullet_everywhere(playerTransform, cameraTransform)
+	
+@rpc("authority","call_local","reliable")
+func spawn_bullet_everywhere(playerTransform: Transform3D, cameraTransform: Transform3D) -> void:
+	var bullet = preload("res://Scenes/bullet.tscn").instantiate()
+	bullet.set_multiplayer_authority(1)
+	bullet.global_transform = playerTransform
+	$bullets.add_child(bullet)
+	var direction = -playerTransform.basis.z
+	direction.y = -cameraTransform.basis.z.y
+	direction = direction.normalized()
+	bullet.apply_central_impulse(direction * 100)

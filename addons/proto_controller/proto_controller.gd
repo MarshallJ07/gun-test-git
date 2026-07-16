@@ -5,6 +5,11 @@
 
 extends CharacterBody3D
 
+signal shoot_requested(transform)
+
+
+
+
 ## Can we move around?
 @export var can_move : bool = true
 ## Are we affected by gravity?
@@ -44,6 +49,8 @@ extends CharacterBody3D
 ## Name of Input Action to toggle freefly mode.
 @export var input_freefly : String = "freefly"
 
+@export var input_shoot : String = "shoot"
+
 var mouse_captured : bool = false
 var look_rotation : Vector2
 var move_speed : float = 0.0
@@ -57,6 +64,10 @@ func _ready() -> void:
 	check_input_mappings()
 	look_rotation.y = rotation.y
 	look_rotation.x = head.rotation.x
+	
+	
+	
+	
 
 func _unhandled_input(event: InputEvent) -> void:
 	# Mouse capturing
@@ -94,7 +105,8 @@ func _physics_process(delta: float) -> void:
 	if can_jump:
 		if Input.is_action_just_pressed(input_jump) and is_on_floor():
 			velocity.y = jump_velocity
-
+	if Input.is_action_just_pressed(input_shoot):
+		shoot.rpc_id(1)
 	# Modify speed based on sprinting
 	if can_sprint and Input.is_action_pressed(input_sprint):
 			move_speed = sprint_speed
@@ -176,3 +188,10 @@ func check_input_mappings():
 	if can_freefly and not InputMap.has_action(input_freefly):
 		push_error("Freefly disabled. No InputAction found for input_freefly: " + input_freefly)
 		can_freefly = false
+		
+@rpc("any_peer","call_local","reliable")
+func shoot() -> void:
+	shoot_requested.emit(global_transform, $Head/Camera3D.global_transform)
+	
+
+	

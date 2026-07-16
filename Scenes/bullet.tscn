@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://diio404vcj34x"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_4mw4s"]
+radius = 0.2
+height = 0.4
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_xjght"]
+radius = 0.2
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_oduel"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[node name="bullet" type="RigidBody3D" unique_id=1582793242]
+collision_layer = 2
+collision_mask = 2
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=191636864]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.725, 0)
+mesh = SubResource("SphereMesh_4mw4s")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=189145490]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.725, 0)
+shape = SubResource("SphereShape3D_xjght")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1251862604]
+replication_config = SubResource("SceneReplicationConfig_oduel")
