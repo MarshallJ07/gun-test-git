@@ -13,6 +13,7 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 		return
 	if body.name.to_int() != id and body.name != $".".name:
 		explode_everywhere.rpc()
+		print(body, '   check_collisions')
 		check_player_collisions.rpc_id(1)
 		
 @rpc("any_peer", "call_local", "reliable")
@@ -26,7 +27,7 @@ func explode_everywhere() -> void:
 
 @rpc("any_peer", "call_local", "reliable")
 func check_player_collisions() -> void:
-	print('check_collisions')
+	
 	var space_state = get_world_3d().direct_space_state
 	
 	var sphere = SphereShape3D.new()
@@ -37,7 +38,7 @@ func check_player_collisions() -> void:
 	query.shape = sphere
 	query.transform = Transform3D(
 		Basis.IDENTITY,
-		$".".global_position
+		global_position
 	)
 	query.collide_with_bodies = true
 	query.collide_with_areas = false
