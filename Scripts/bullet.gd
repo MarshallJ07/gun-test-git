@@ -26,6 +26,7 @@ func explode_everywhere() -> void:
 
 @rpc("any_peer", "call_local", "reliable")
 func check_player_collisions() -> void:
+	print('check_collisions')
 	var space_state = get_world_3d().direct_space_state
 	
 	var sphere = SphereShape3D.new()
@@ -49,6 +50,7 @@ func check_player_collisions() -> void:
 		var body = result.collider
 
 		if body is CharacterBody3D:
+			print('body  ',body)
 			explode.rpc(body.name.to_int())
 			
 @rpc("any_peer", "call_local", "reliable")
