@@ -5,6 +5,8 @@ signal request_ragdoll()
 var id: int
 
 
+const RAGDOLL = preload("uid://du7sr352qonrg")
+
 func _ready() -> void:
 	pass 
 
@@ -57,7 +59,7 @@ func check_player_collisions() -> void:
 @rpc("any_peer", "call_local", "reliable")
 func explode(peer_id) -> void:
 	print('createRagdoll')
-	var ragdoll = preload("res://Scenes/ragdoll.tscn").instantiate()
+	var ragdoll = RAGDOLL.instantiate()
 	ragdoll.id = peer_id
 	ragdoll.set_multiplayer_authority(1)
 	get_parent().get_parent().get_node("ragdolls").add_child(ragdoll)
