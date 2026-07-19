@@ -51,6 +51,7 @@ func check_player_collisions(peer_id) -> void:
 		var body = result.collider
 
 		if body is CharacterBody3D:
+			print(body.name)
 			explode.rpc()
 			
 @rpc("any_peer", "call_local", "reliable")
