@@ -68,12 +68,13 @@ func spawn_player(peer_id:int):
 	player.shoot_requested.connect(_on_player_shoot_requested)
 	
 	
-func _on_player_shoot_requested(playerTransform: Transform3D, cameraTransform: Transform3D, peer_id: int):
-	spawn_bullet_everywhere.rpc(playerTransform, cameraTransform, peer_id)
+func _on_player_shoot_requested(player: CharacterBody3D,playerTransform: Transform3D, cameraTransform: Transform3D, peer_id: int):
+	spawn_bullet_everywhere.rpc(player, playerTransform, cameraTransform, peer_id)
 	
 @rpc("authority","call_local","reliable")
-func spawn_bullet_everywhere(playerTransform: Transform3D, cameraTransform: Transform3D, peer_id: int) -> void:
+func spawn_bullet_everywhere(player: CharacterBody3D,playerTransform: Transform3D, cameraTransform: Transform3D, peer_id: int) -> void:
 	var bullet = preload("res://Scenes/bullet.tscn").instantiate()
+	player.add_collision_exception_with(bullet)
 	bullet.set_multiplayer_authority(1)
 	bullet.global_transform = playerTransform
 	bullet.id = peer_id
