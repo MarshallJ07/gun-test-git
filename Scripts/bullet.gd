@@ -12,22 +12,20 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 	if not is_multiplayer_authority():
 		return
 	if body.name.to_int() != id and body.name != $".".name:
-		explode_everywhere.rpc(body.name.to_int())
+		explode_everywhere.rpc()
 		
 		
 @rpc("any_peer", "call_local", "reliable")
-func explode_everywhere(peer_id) -> void:
+func explode_everywhere() -> void:
 	$particles.restart()
 	$CollisionShape3D.queue_free()
 	$MeshInstance3D.queue_free()
 	$Area3D.queue_free()
-	check_player_collisions.rpc_id(1,id)
+	check_player_collisions.rpc_id(1)
 
 
 @rpc("any_peer", "call_local", "reliable")
-func check_player_collisions(peer_id) -> void:
-	if id != peer_id:
-		return
+func check_player_collisions() -> void:
 	var space_state = get_world_3d().direct_space_state
 	
 	var sphere = SphereShape3D.new()
@@ -51,11 +49,11 @@ func check_player_collisions(peer_id) -> void:
 		var body = result.collider
 
 		if body is CharacterBody3D:
-			explode.rpc(int(body.name))
+			explode.rpc(body.name.to_int())
 			
 @rpc("any_peer", "call_local", "reliable")
 func explode(peer_id) -> void:
-	
+	print('createRagdoll')
 	var ragdoll = preload("res://Scenes/ragdoll.tscn").instantiate()
 	ragdoll.id = peer_id
 	ragdoll.set_multiplayer_authority(1)
