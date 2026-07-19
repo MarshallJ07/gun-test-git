@@ -3,8 +3,8 @@ extends Node3D
 
 const PROTO_CONTROLLER = preload("uid://bs72ogkvdd7d6")
 var players: Array[CharacterBody3D]
-
-
+var spawnOrder: int
+var currentSpawn: int = 0
 
 
 
@@ -20,11 +20,17 @@ func _ready():
 	
 	
 func _on_host_created():
-	pass
+	spawnOrder = currentSpawn
+	currentSpawn += 1
 	
 func _peer_connected(peer_id:int):
 	ids.append(peer_id)
-
+	if multiplayer.is_server():
+		get_spawn_order(currentSpawn)
+		currentSpawn += 1
+@rpc("any_peer","reliable")
+func get_spawn_order(num) -> void:
+	spawnOrder = num
 
 func _on_button_pressed() -> void:
 	$CanvasLayer/host.disabled = true
@@ -46,8 +52,7 @@ func hide_buttons() -> void:
 	
 	
 func initialize_player(player:CharacterBody3D):
-
-	player.global_position = $spawnpoints.get_child(players.find(player)).global_position
+	player.global_position = $spawnpoints.get_child(spawnOrder).global_position
 
 	for other in players:
 		player.add_collision_exception_with(other)
