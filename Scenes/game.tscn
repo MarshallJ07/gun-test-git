@@ -114,6 +114,17 @@ shape = SubResource("BoxShape3D_ldgsr")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 100, 0)
 mesh = SubResource("BoxMesh_o5yvi")
 
+[node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=1138309845]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 65.01157, 0)
+light_energy = 7.66
+light_indirect_energy = 8.034
+light_volumetric_fog_energy = 3.555
+light_size = 0.075
+light_specular = 0.42
+spot_range = 156.221
+spot_attenuation = 0.83
+spot_angle = 66.72
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=507643995]
 transform = Transform3D(1, 0, 0, 0, 0.84733516, 0.5310585, 0, -0.5310585, 0.84733516, 0, 33.112335, 38.1262)
 light_energy = 0.172

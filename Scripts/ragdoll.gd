@@ -19,4 +19,6 @@ func update_cam() -> void:
 func delete_ragdoll() -> void:
 	print('id  ',id,'  host: ', multiplayer.is_server() )
 	get_parent().get_parent().get_node("players").get_node(str(id)).show()
+	get_parent().get_parent().get_node("players").get_node(str(id)).can_move = true
+	get_parent().get_parent().get_node("players").get_node(str(id)).can_shoot = true
 	queue_free()

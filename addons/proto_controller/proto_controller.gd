@@ -21,6 +21,8 @@ signal shoot_requested()
 ## Can we press to enter freefly mode (noclip)?
 @export var can_freefly : bool = false
 
+@export var can_shoot : bool = true
+
 @export_group("Speeds")
 ## Look around rotation speed.
 @export var look_speed : float = 0.002
@@ -107,8 +109,9 @@ func _physics_process(delta: float) -> void:
 	if can_jump:
 		if Input.is_action_just_pressed(input_jump) and is_on_floor():
 			velocity.y = jump_velocity
-	if Input.is_action_just_pressed(input_shoot):
-		shoot.rpc_id(1, global_transform, $Head/Camera3D.global_transform, name.to_int())
+	if can_shoot:
+		if Input.is_action_just_pressed(input_shoot):
+			shoot.rpc_id(1, global_transform, $Head/Camera3D.global_transform, name.to_int())
 	# Modify speed based on sprinting
 	if can_sprint and Input.is_action_pressed(input_sprint):
 			move_speed = sprint_speed

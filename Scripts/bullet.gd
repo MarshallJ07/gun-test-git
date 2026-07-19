@@ -58,14 +58,19 @@ func check_player_collisions() -> void:
 			
 @rpc("any_peer", "call_local", "reliable")
 func explode(peer_id) -> void:
-	print('createRagdoll')
+	for ragdoll in get_parent().get_parent().get_node("ragdolls").get_children():
+		if ragdoll.id == peer_id:
+			ragdoll.global_position = get_parent().get_parent().get_node("players").get_node(str(peer_id)).global_position
+			ragdoll.apply_impulse((ragdoll.global_position - global_position).normalized() * 25)
+			return
 	var ragdoll = RAGDOLL.instantiate()
 	ragdoll.id = peer_id
 	ragdoll.set_multiplayer_authority(1)
 	get_parent().get_parent().get_node("ragdolls").add_child(ragdoll)
 	ragdoll.global_position = get_parent().get_parent().get_node("players").get_node(str(peer_id)).global_position
 	ragdoll.apply_impulse((ragdoll.global_position - global_position).normalized() * 25)
-
+	get_parent().get_parent().get_node("players").get_node(str(peer_id)).can_move = false
+	get_parent().get_parent().get_node("players").get_node(str(peer_id)).can_shoot = false
 	get_parent().get_parent().get_node("players").get_node(str(peer_id)).hide()
 	
 	
