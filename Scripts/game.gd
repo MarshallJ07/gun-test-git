@@ -47,7 +47,7 @@ func hide_buttons() -> void:
 	
 func initialize_player(player:CharacterBody3D):
 
-	player.global_position = $spawnpoint.global_position
+	player.global_position = $spawnpoints.get_child(players.find(player)).global_position
 
 	for other in players:
 		player.add_collision_exception_with(other)

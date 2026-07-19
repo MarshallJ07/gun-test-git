@@ -27,8 +27,20 @@ mesh = SubResource("BoxMesh_qxrlw")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=507643995]
 transform = Transform3D(1, 0, 0, 0, 0.84733516, 0.5310585, 0, -0.5310585, 0.84733516, 0, 33.112335, 38.1262)
 
-[node name="spawnpoint" type="Node3D" parent="." unique_id=179447209]
+[node name="spawnpoints" type="Node3D" parent="." unique_id=179447209]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.0776205, 33.121735)
+
+[node name="spawnpoint1" type="Node3D" parent="spawnpoints" unique_id=1401083778]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
+
+[node name="spawnpoint2" type="Node3D" parent="spawnpoints" unique_id=2083732838]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
+
+[node name="spawnpoint3" type="Node3D" parent="spawnpoints" unique_id=1840592736]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0, 0)
+
+[node name="spawnpoint4" type="Node3D" parent="spawnpoints" unique_id=1013693463]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0, 0)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1264728325]
 
