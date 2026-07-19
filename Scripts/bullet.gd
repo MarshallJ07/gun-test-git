@@ -61,10 +61,10 @@ func explode(peer_id) -> void:
 	ragdoll.id = peer_id
 	ragdoll.set_multiplayer_authority(1)
 	get_parent().get_parent().get_node("ragdolls").add_child(ragdoll)
-	ragdoll.global_position = get_parent().get_parent().get_node("players").get_node(str(id)).global_position
+	ragdoll.global_position = get_parent().get_parent().get_node("players").get_node(str(peer_id)).global_position
 	ragdoll.apply_impulse((ragdoll.global_position - global_position).normalized() * 25)
 
-	get_parent().get_parent().get_node("players").get_node(str(id)).hide()
+	get_parent().get_parent().get_node("players").get_node(str(peer_id)).hide()
 	
 	
 	
