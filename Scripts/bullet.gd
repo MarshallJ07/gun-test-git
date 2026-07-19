@@ -13,7 +13,7 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 		return
 	if body.name.to_int() != id and body.name != $".".name:
 		explode_everywhere.rpc()
-		
+		check_player_collisions.rpc_id(1)
 		
 @rpc("any_peer", "call_local", "reliable")
 func explode_everywhere() -> void:
@@ -21,7 +21,7 @@ func explode_everywhere() -> void:
 	$CollisionShape3D.queue_free()
 	$MeshInstance3D.queue_free()
 	$Area3D.queue_free()
-	check_player_collisions.rpc_id(1)
+	
 
 
 @rpc("any_peer", "call_local", "reliable")
