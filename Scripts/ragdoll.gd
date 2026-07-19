@@ -15,7 +15,7 @@ func update_cam() -> void:
 	if linear_velocity.length() < 0.5 and $Timer.is_stopped():
 		delete_ragdoll.rpc()
 		
-@rpc("authority","call_local","reliable")
+@rpc("any_peer","call_local","reliable")
 func delete_ragdoll() -> void:
 	print('id  ',id,'  host: ', multiplayer.is_server() )
 	get_parent().get_parent().get_node("players").get_node(str(id)).show()
