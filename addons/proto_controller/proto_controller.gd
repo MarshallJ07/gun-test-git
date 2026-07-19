@@ -193,7 +193,7 @@ func check_input_mappings():
 		
 @rpc("any_peer","call_local","reliable")
 func shoot(playerTransform: Transform3D, cameraTransform: Transform3D, peer_id: int) -> void:
-	shoot_requested.emit(self, playerTransform, cameraTransform, peer_id)
+	shoot_requested.emit(playerTransform, cameraTransform, peer_id)
 	
 
 	
