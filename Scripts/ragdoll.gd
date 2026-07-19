@@ -17,5 +17,6 @@ func update_cam() -> void:
 		
 @rpc("authority","call_local","reliable")
 func delete_ragdoll() -> void:
+	print('id  ',id,'  host: ', multiplayer.is_server() )
 	get_parent().get_parent().get_node("players").get_node(str(id)).show()
 	queue_free()
