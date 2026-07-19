@@ -51,14 +51,13 @@ func check_player_collisions(peer_id) -> void:
 		var body = result.collider
 
 		if body is CharacterBody3D:
-			print(body.name)
-			explode.rpc()
+			explode.rpc(int(body.name))
 			
 @rpc("any_peer", "call_local", "reliable")
-func explode() -> void:
+func explode(peer_id) -> void:
 	
 	var ragdoll = preload("res://Scenes/ragdoll.tscn").instantiate()
-	ragdoll.id = id
+	ragdoll.id = peer_id
 	ragdoll.set_multiplayer_authority(1)
 	get_parent().get_parent().get_node("ragdolls").add_child(ragdoll)
 	ragdoll.global_position = get_parent().get_parent().get_node("players").get_node(str(id)).global_position
