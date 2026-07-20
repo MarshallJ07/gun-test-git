@@ -11,7 +11,7 @@ func _physics_process(delta: float) -> void:
 		
 func update_cam() -> void:
 	get_parent().get_parent().get_node("players").get_node(str(id)).global_position = global_position
-	if linear_velocity.length() < 0.5 and $Timer.is_stopped():
+	if linear_velocity.length() < 1.5 and $Timer.is_stopped():
 		delete_ragdoll.rpc()
 		
 @rpc("any_peer","call_local","reliable")

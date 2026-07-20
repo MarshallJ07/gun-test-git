@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://m3ivi6spn5vj" path="res://Scripts/ragdoll.gd" id="1_1d85k"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_1d85k"]
-friction = 0.2
+friction = 0.6
 bounce = 0.5
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hgmv7"]
