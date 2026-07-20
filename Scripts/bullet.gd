@@ -15,7 +15,6 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 		return
 	if body.name.to_int() != id and body.name != $".".name:
 		explode_everywhere.rpc()
-		print(body, '   check_collisions')
 		check_player_collisions.rpc_id(1)
 		
 @rpc("any_peer", "call_local", "reliable")
@@ -72,11 +71,15 @@ func explode(peer_id) -> void:
 	get_parent().get_parent().get_node("players").get_node(str(peer_id)).can_move = false
 	get_parent().get_parent().get_node("players").get_node(str(peer_id)).can_shoot = false
 	get_parent().get_parent().get_node("players").get_node(str(peer_id)).hide()
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+func _on_particles_finished() -> void:
 	queue_free()
-	
-	
-	
-	
-	
-	
-	
