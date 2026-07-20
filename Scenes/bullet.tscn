@@ -28,8 +28,8 @@ albedo_color = Color(0.4039033, 7.6407565e-07, 2.4065375e-08, 1)
 material = SubResource("StandardMaterial3D_xjght")
 
 [node name="bullet" type="RigidBody3D" unique_id=1582793242]
-collision_layer = 2
-collision_mask = 2
+collision_layer = 6
+collision_mask = 6
 continuous_cd = true
 script = ExtResource("1_xjght")
 
