@@ -3,6 +3,8 @@ extends RigidBody3D
 var id: int
 
 func _ready() -> void:
+	
+	
 	$Timer.start()
 
 func _physics_process(delta: float) -> void:

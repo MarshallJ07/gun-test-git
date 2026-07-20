@@ -8,7 +8,11 @@ var id: int
 const RAGDOLL = preload("uid://du7sr352qonrg")
 
 func _ready() -> void:
-	pass 
+	$particles.amount = 1024
+	$particles.scale_amount_min = 1
+	$particles.scale_amount_max = 1.5
+	$particles.initial_velocity_min = 15
+	$particles.initial_velocity_max = 30
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
 	if not is_multiplayer_authority():
@@ -32,7 +36,7 @@ func check_player_collisions() -> void:
 	var space_state = get_world_3d().direct_space_state
 	
 	var sphere = SphereShape3D.new()
-	sphere.radius = 5.0 # <-- Change to your explosion radius
+	sphere.radius = 20 # <-- Change to your explosion radius
 
 	# Create the query
 	var query = PhysicsShapeQueryParameters3D.new()
