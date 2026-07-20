@@ -2,6 +2,10 @@
 
 [ext_resource type="Script" uid="uid://m3ivi6spn5vj" path="res://Scripts/ragdoll.gd" id="1_1d85k"]
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_1d85k"]
+friction = 0.2
+bounce = 0.5
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hgmv7"]
 albedo_color = Color(0.91806, 0.575202, 0.222449, 1)
 
@@ -21,9 +25,13 @@ properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
+[sub_resource type="BoxMesh" id="BoxMesh_222jj"]
+size = Vector3(0.8, 0.3, 0.3)
+
 [node name="ragdoll" type="RigidBody3D" unique_id=498367769]
 collision_layer = 4
 collision_mask = 4
+physics_material_override = SubResource("PhysicsMaterial_1d85k")
 script = ExtResource("1_1d85k")
 
 [node name="Mesh" type="MeshInstance3D" parent="." unique_id=411522898]
@@ -40,3 +48,7 @@ replication_config = SubResource("SceneReplicationConfig_hgmv7")
 [node name="Timer" type="Timer" parent="." unique_id=531958131]
 wait_time = 0.1
 one_shot = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1499475233]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, -0.3)
+mesh = SubResource("BoxMesh_222jj")
