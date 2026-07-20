@@ -72,7 +72,7 @@ func explode(peer_id) -> void:
 	get_parent().get_parent().get_node("players").get_node(str(peer_id)).can_move = false
 	get_parent().get_parent().get_node("players").get_node(str(peer_id)).can_shoot = false
 	get_parent().get_parent().get_node("players").get_node(str(peer_id)).hide()
-	
+	queue_free()
 	
 	
 	
