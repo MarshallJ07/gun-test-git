@@ -23,6 +23,14 @@ size = Vector3(0.09, 0.355, 0.365)
 [sub_resource type="BoxShape3D" id="BoxShape3D_36t74"]
 size = Vector3(0.09, 0.285, 0.27)
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_q8aie"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
 [node name="wrench" type="RigidBody3D" unique_id=1254248989 groups=["item", "tool"]]
 physics_material_override = SubResource("PhysicsMaterial_q8aie")
 
@@ -64,3 +72,6 @@ shape = SubResource("BoxShape3D_7d1oe")
 [node name="CollisionShape3D3" type="CollisionShape3D" parent="." unique_id=1226150755]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0054947734, -0.77958363, 0)
 shape = SubResource("BoxShape3D_36t74")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1587847702]
+replication_config = SubResource("SceneReplicationConfig_q8aie")

@@ -1,7 +1,6 @@
 extends StaticBody3D
 
 @onready var particles: GPUParticles3D = $particles
-
 @onready var healthBar: ProgressBar = $SubViewport/ProgressBar
 
 var targetParticleAmount:int
