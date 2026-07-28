@@ -18,11 +18,18 @@ func _need_repairs() -> void:
 		healthBar.value = 50
 		particles.amount_ratio = 100/healthBar.value - 1
 
+
 func _repairing(object, dmg:float) -> void:
 	if object != self:
 		return
+	_repair_host.rpc(dmg)
+
+@rpc("any_peer","call_local","reliable")
+func _repair_host(dmg:int) -> void:
 	if healthBar.value < 100:
 		healthBar.value += dmg
 	else:
 		healthBar.value = 100
 	particles.amount_ratio = 100/healthBar.value - 1
+	
+	

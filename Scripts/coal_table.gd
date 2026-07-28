@@ -5,7 +5,7 @@ extends Area3D
 func _physics_process(delta: float) -> void:
 	for i in get_overlapping_bodies():
 		if i.is_in_group("coal"):
-			delete_everywhere(i.name)
+			delete_everywhere.rpc(i.name)
 
 @rpc("any_peer","call_local","reliable")
 func delete_everywhere(objName:String) -> void:

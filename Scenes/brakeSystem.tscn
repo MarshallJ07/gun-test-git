@@ -38,6 +38,9 @@ properties/0/replication_mode = 1
 properties/1/path = NodePath("SubViewport/ProgressBar:value")
 properties/1/spawn = true
 properties/1/replication_mode = 1
+properties/2/path = NodePath("particles:amount_ratio")
+properties/2/spawn = true
+properties/2/replication_mode = 1
 
 [node name="brakeSystem" type="StaticBody3D" unique_id=480060740 groups=["fixable"]]
 script = ExtResource("1_5gr5j")
