@@ -22,40 +22,36 @@ func _physics_process(delta: float) -> void:
 				holding = object
 				holding.add_collision_exception_with(root)
 				
-				# Set authority to the player picking it up
-				holding.set_multiplayer_authority(multiplayer.get_unique_id())
-				
-				# Check if it's a tool to apply the static mesh behavior
 				if object.is_in_group("tool"):
 					root.hasTool = true
 					holding_is_tool = true
-					holding.freeze = true # Disables physics so it acts like a mesh
 				else:
 					holding_is_tool = false
+				
+				# Call the RPC to tell ALL players (and the host) to update this item
+				rpc("update_item_network_state", holding.get_path(), multiplayer.get_unique_id(), holding_is_tool)
 
 	# 2. Throw the item
 	elif Input.is_action_just_pressed("throw") and holding != null:
 		if holding_is_tool:
-			holding.freeze = false # Turn physics back on before throwing
 			root.hasTool = false
 			
 		var throw_direction = -cam.global_basis.z.normalized()
 		holding.linear_velocity = throw_direction * throw_power
 		
-		# Return authority to host (1) BEFORE clearing the variable
-		holding.set_multiplayer_authority(1)
+		# Tell all players to return authority to Host (1) and unfreeze it
+		rpc("update_item_network_state", holding.get_path(), 1, false)
 		holding = null
 		
 	# 3. Drop the item
 	elif Input.is_action_just_pressed("drop") and holding != null:
 		if holding_is_tool:
-			holding.freeze = false # Turn physics back on before dropping
 			root.hasTool = false
 			
 		holding.linear_velocity = Vector3(0, 3, 0)
 		
-		# Return authority to host (1) BEFORE clearing the variable
-		holding.set_multiplayer_authority(1)
+		# Tell all players to return authority to Host (1) and unfreeze it
+		rpc("update_item_network_state", holding.get_path(), 1, false)
 		holding = null
 
 	# 4. Hold and move (Executes every frame we are holding something)
@@ -86,3 +82,20 @@ func _physics_process(delta: float) -> void:
 				holding.angular_velocity = axis * angle * rotate_power
 			else:
 				holding.angular_velocity = Vector3.ZERO
+
+
+# --- NETWORK SYNCHRONIZATION ---
+
+# "any_peer" allows clients to call this on the server.
+# "call_local" ensures the person who triggered it also runs the code.
+# "reliable" ensures the packet doesn't get dropped.
+@rpc("any_peer", "call_local", "reliable")
+func update_item_network_state(item_path: NodePath, new_authority_id: int, should_freeze: bool):
+	# Safely get the item using its path in the scene tree
+	var item = get_node_or_null(item_path)
+	
+	if item and item is RigidBody3D:
+		# Now everyone universally agrees who owns it
+		item.set_multiplayer_authority(new_authority_id)
+		# And everyone universally agrees if physics are turned off for it
+		item.freeze = should_freeze
