@@ -22,6 +22,9 @@ func _physics_process(delta: float) -> void:
 				holding = object
 				holding.add_collision_exception_with(root)
 				
+				# Set authority to the player picking it up
+				holding.set_multiplayer_authority(multiplayer.get_unique_id())
+				
 				# Check if it's a tool to apply the static mesh behavior
 				if object.is_in_group("tool"):
 					root.hasTool = true
@@ -38,6 +41,9 @@ func _physics_process(delta: float) -> void:
 			
 		var throw_direction = -cam.global_basis.z.normalized()
 		holding.linear_velocity = throw_direction * throw_power
+		
+		# Return authority to host (1) BEFORE clearing the variable
+		holding.set_multiplayer_authority(1)
 		holding = null
 		
 	# 3. Drop the item
@@ -47,6 +53,9 @@ func _physics_process(delta: float) -> void:
 			root.hasTool = false
 			
 		holding.linear_velocity = Vector3(0, 3, 0)
+		
+		# Return authority to host (1) BEFORE clearing the variable
+		holding.set_multiplayer_authority(1)
 		holding = null
 
 	# 4. Hold and move (Executes every frame we are holding something)
