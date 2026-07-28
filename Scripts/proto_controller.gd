@@ -5,8 +5,6 @@
 
 extends CharacterBody3D
 
-signal shoot_requested()
-
 
 
 
@@ -51,16 +49,17 @@ signal shoot_requested()
 ## Name of Input Action to toggle freefly mode.
 @export var input_freefly : String = "freefly"
 
-@export var input_shoot : String = "shoot"
-
 var mouse_captured : bool = false
 var look_rotation : Vector2
 var move_speed : float = 0.0
 var freeflying : bool = false
-
+var hasTool := false
 ## IMPORTANT REFERENCES
 @onready var head: Node3D = $Head
 @onready var collider: CollisionShape3D = $Collider
+@onready var animation: AnimationPlayer = $AnimationPlayer
+@onready var raycast: RayCast3D = $Head/Camera3D/RayCast3D
+
 
 func _ready() -> void:
 	check_input_mappings()
@@ -69,7 +68,8 @@ func _ready() -> void:
 	
 	
 	
-	
+func _tool_change() -> void:
+	pass
 
 func _unhandled_input(event: InputEvent) -> void:
 	# Mouse capturing
@@ -105,16 +105,23 @@ func _physics_process(delta: float) -> void:
 		if not is_on_floor():
 			velocity += get_gravity() * delta
 
+	if hasTool:
+		if Input.is_action_just_pressed("Interact"):
+			animation.play("use tool")
+			
+					
+			
+
 	# Apply jumping
 	if can_jump:
 		if Input.is_action_just_pressed(input_jump) and is_on_floor():
 			velocity.y = jump_velocity
-	if can_shoot:
-		if Input.is_action_just_pressed(input_shoot):
-			shoot.rpc_id(1, global_transform, $Head/Camera3D.global_transform, name.to_int())
 	# Modify speed based on sprinting
 	if can_sprint and Input.is_action_pressed(input_sprint):
 			move_speed = sprint_speed
+	
+	
+			
 	else:
 		move_speed = base_speed
 
@@ -194,9 +201,14 @@ func check_input_mappings():
 		push_error("Freefly disabled. No InputAction found for input_freefly: " + input_freefly)
 		can_freefly = false
 		
-@rpc("any_peer","call_local","reliable")
-func shoot(playerTransform: Transform3D, cameraTransform: Transform3D, peer_id: int) -> void:
-	shoot_requested.emit(playerTransform, cameraTransform, peer_id)
+
 	
 
 	
+
+
+func _on_animation_player_animation_finished(anim_name: StringName) -> void:
+	if anim_name == "use tool":
+		if raycast.is_colliding():
+			var object = raycast.get_collider()
+			EventBus.repairing.emit(object,10)

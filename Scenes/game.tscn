@@ -1,13 +1,18 @@
 [gd_scene format=3 uid="uid://b32euooeepj63"]
 
 [ext_resource type="Script" uid="uid://c1he2t7rugk8k" path="res://Scripts/game.gd" id="1_ebmjs"]
-[ext_resource type="Script" uid="uid://cg83coospv55e" path="res://Scripts/bullets.gd" id="2_qxrlw"]
+[ext_resource type="PackedScene" uid="uid://1f2uvyu5jm61" path="res://Scenes/train_car_connected.tscn" id="2_i6g32"]
+[ext_resource type="PackedScene" uid="uid://dwkmp06nqc7ak" path="res://Scenes/train_car.tscn" id="2_qxrlw"]
+[ext_resource type="PackedScene" uid="uid://crvavbl8dxmox" path="res://Scenes/wrench.tscn" id="3_wrm1d"]
+[ext_resource type="PackedScene" uid="uid://cqpusnwnhrhov" path="res://Scenes/coal.tscn" id="4_3dryh"]
+[ext_resource type="Script" uid="uid://51b64ga8ep4t" path="res://Scripts/coal_table.gd" id="4_wowpa"]
+[ext_resource type="PackedScene" uid="uid://cjurrosh7brj5" path="res://Scenes/brakeSystem.tscn" id="6_1l0tm"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qxrlw"]
-size = Vector3(100, 1, 100)
+size = Vector3(100, 1, 200)
 
 [sub_resource type="BoxMesh" id="BoxMesh_qxrlw"]
-size = Vector3(100, 1, 100)
+size = Vector3(100, 1, 200)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ebmjs"]
 size = Vector3(100, 100, 1)
@@ -39,6 +44,21 @@ size = Vector3(100, 1, 100)
 [sub_resource type="BoxMesh" id="BoxMesh_o5yvi"]
 size = Vector3(100, 1, 100)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_h4fw4"]
+size = Vector3(6, 2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3dryh"]
+size = Vector3(6, 2, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1l0tm"]
+size = Vector3(0.5, 1, 7)
+
+[sub_resource type="BoxMesh" id="BoxMesh_v158k"]
+size = Vector3(0.5, 1, 7)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wowpa"]
+size = Vector3(6, 0.5, 2)
+
 [node name="game" type="Node3D" unique_id=1293817836]
 script = ExtResource("1_ebmjs")
 
@@ -49,10 +69,18 @@ collision_layer = 7
 collision_mask = 7
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="world/StaticBody3D" unique_id=689972995]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 50)
 shape = SubResource("BoxShape3D_qxrlw")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="world/StaticBody3D" unique_id=1905676423]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 50)
 mesh = SubResource("BoxMesh_qxrlw")
+
+[node name="train car" parent="world/StaticBody3D" unique_id=950246481 instance=ExtResource("2_i6g32")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 27.5)
+
+[node name="train car2" parent="world/StaticBody3D" unique_id=1066797238 instance=ExtResource("2_i6g32")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 55)
 
 [node name="StaticBody3D2" type="StaticBody3D" parent="world" unique_id=967339846]
 collision_layer = 7
@@ -67,6 +95,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 50, -50)
 mesh = SubResource("BoxMesh_wrm1d")
 
 [node name="StaticBody3D3" type="StaticBody3D" parent="world" unique_id=122234844]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 117.0527)
 collision_layer = 7
 collision_mask = 7
 
@@ -114,6 +143,28 @@ shape = SubResource("BoxShape3D_ldgsr")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 100, 0)
 mesh = SubResource("BoxMesh_o5yvi")
 
+[node name="StaticBody3D7" type="StaticBody3D" parent="world" unique_id=1101115451]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.8709836, 1.8847623, -0.38717318)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="world/StaticBody3D7" unique_id=864999596]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.36498833)
+shape = SubResource("BoxShape3D_h4fw4")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="world/StaticBody3D7" unique_id=43261766]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.35)
+mesh = SubResource("BoxMesh_3dryh")
+
+[node name="StaticBody3D8" type="StaticBody3D" parent="world" unique_id=460510560]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.8709836, 1.8847623, -0.38717318)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="world/StaticBody3D8" unique_id=666179410]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -2.875)
+shape = SubResource("BoxShape3D_1l0tm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="world/StaticBody3D8" unique_id=1822633940]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -2.875)
+mesh = SubResource("BoxMesh_v158k")
+
 [node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=1138309845]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 65.01157, 0)
 light_energy = 7.66
@@ -131,7 +182,7 @@ light_energy = 0.172
 light_angular_distance = 90.0
 
 [node name="spawnpoints" type="Node3D" parent="." unique_id=179447209]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.0776205, 33.121735)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.375973, 4.0776205, -0.44417572)
 
 [node name="spawnpoint1" type="Node3D" parent="spawnpoints" unique_id=1401083778]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
@@ -174,10 +225,71 @@ offset_bottom = 23.0
 
 [node name="players" type="Node3D" parent="." unique_id=1928004491]
 
-[node name="bullets" type="Node3D" parent="." unique_id=756830785]
-script = ExtResource("2_qxrlw")
+[node name="train car" parent="." unique_id=156863809 instance=ExtResource("2_qxrlw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
-[node name="ragdolls" type="Node3D" parent="." unique_id=1405019819]
+[node name="train car2" parent="." unique_id=979163087 instance=ExtResource("2_qxrlw")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 1, 82.5)
+
+[node name="coal table" type="Area3D" parent="." unique_id=1893033737]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.8709836, 0, -11.812769)
+script = ExtResource("4_wowpa")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="coal table" unique_id=2021547277]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.425, 2.839, -0.35)
+shape = SubResource("BoxShape3D_wowpa")
+
+[node name="coal ores" type="Node3D" parent="." unique_id=894008587]
+
+[node name="coal" parent="coal ores" unique_id=2096634230 instance=ExtResource("4_3dryh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6569533, -10.070526)
+
+[node name="coal2" parent="coal ores" unique_id=647409452 instance=ExtResource("4_3dryh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5430913, 2.6569533, -10.070526)
+
+[node name="coal3" parent="coal ores" unique_id=219792318 instance=ExtResource("4_3dryh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5430913, 3.3775363, -10.070526)
+
+[node name="coal4" parent="coal ores" unique_id=865257735 instance=ExtResource("4_3dryh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.86981916, 3.3775363, -10.070526)
+
+[node name="coal5" parent="coal ores" unique_id=332336098 instance=ExtResource("4_3dryh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.86981916, 3.749446, -10.070526)
+
+[node name="coal6" parent="coal ores" unique_id=1711576966 instance=ExtResource("4_3dryh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2524717, 3.749446, -10.070526)
+
+[node name="coal7" parent="coal ores" unique_id=98185555 instance=ExtResource("4_3dryh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2524717, 4.548635, -10.070526)
+
+[node name="coal8" parent="coal ores" unique_id=1891901206 instance=ExtResource("4_3dryh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1017346, 4.548635, -10.070526)
+
+[node name="coal9" parent="coal ores" unique_id=2081152094 instance=ExtResource("4_3dryh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1017346, 4.548635, -8.070526)
+
+[node name="coal10" parent="coal ores" unique_id=1371718833 instance=ExtResource("4_3dryh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.678569, 4.548635, -8.070526)
+
+[node name="coal11" parent="coal ores" unique_id=298993601 instance=ExtResource("4_3dryh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.678569, 4.548635, -7.3840246)
+
+[node name="coal12" parent="coal ores" unique_id=672433076 instance=ExtResource("4_3dryh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8100165, 4.548635, -7.3840246)
+
+[node name="coal13" parent="coal ores" unique_id=148533990 instance=ExtResource("4_3dryh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8100165, 4.548635, -7.3840246)
+
+[node name="repair timer" type="Timer" parent="." unique_id=579990783]
+wait_time = 10.0
+autostart = true
+
+[node name="brakeSystem" parent="." unique_id=480060740 instance=ExtResource("6_1l0tm")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 2.5519652, 2.25, 18.085783)
+
+[node name="wrench" parent="." unique_id=1254248989 instance=ExtResource("3_wrm1d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.786397, 2.1539154, -0.52666116)
 
 [connection signal="pressed" from="CanvasLayer/host" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/start" to="." method="_on_start_pressed"]
+[connection signal="timeout" from="repair timer" to="." method="_on_repair_timer_timeout"]

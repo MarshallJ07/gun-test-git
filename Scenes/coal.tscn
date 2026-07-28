@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://cqpusnwnhrhov"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4v3ac"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_x6f8n"]
+material = SubResource("StandardMaterial3D_4v3ac")
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_7w8tp"]
+
+[node name="coal" type="RigidBody3D" unique_id=2096634230 groups=["coal", "item"]]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=826965931]
+mesh = SubResource("SphereMesh_x6f8n")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2043298440]
+shape = SubResource("SphereShape3D_7w8tp")

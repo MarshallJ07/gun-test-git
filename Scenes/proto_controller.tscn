@@ -1,0 +1,142 @@
+[gd_scene format=3 uid="uid://bs72ogkvdd7d6"]
+
+[ext_resource type="Script" uid="uid://djcqrencjwdv8" path="res://Scripts/proto_controller.gd" id="1_8aouf"]
+[ext_resource type="Script" uid="uid://byveuchmjcs8s" path="res://Scripts/head.gd" id="2_xghp4"]
+[ext_resource type="Script" uid="uid://cokfj1sis73wh" path="res://Scripts/hand.gd" id="3_n58ld"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iof21"]
+albedo_color = Color(0.91806, 0.575202, 0.222449, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ucva2"]
+radius = 0.4
+height = 2.5
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_iof21"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_g2uji"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("Head/Camera3D:position")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("Head/Camera3D:rotation")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+
+[sub_resource type="Animation" id="Animation_xghp4"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Head/hand:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.8273318, 0.1708272, 0.4409648)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Head/hand:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.6954974, 0, -1.6594616)]
+}
+
+[sub_resource type="Animation" id="Animation_n58ld"]
+resource_name = "use tool"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Head/hand:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.53333336, 0.9, 1),
+"transitions": PackedFloat32Array(1.3195121, 1.3195121, 1.3195121, 1.3195121, 1.3195121),
+"update": 0,
+"values": [Vector3(-0.8273318, 0.1708272, 0.4409648), Vector3(-0.8273318, 0.1708272, 0.4409648), Vector3(-0.0794234, 0.16384485, 0.12502818), Vector3(0.35142776, 0.83876336, 0.26298863), Vector3(-0.8273318, 0.1708272, 0.4409648)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Head/hand:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.53333336, 0.9, 1),
+"transitions": PackedFloat32Array(1.3195121, 1.3195121, 1.3195121, 1.3195121, 1.3195121),
+"update": 0,
+"values": [Vector3(0.6954974, 0, -1.6594616), Vector3(0.6954974, 0, -1.6594616), Vector3(0.6954974, 0.23436928, -0.5782852), Vector3(0.9340347, 0.17486787, 0.1586678), Vector3(0.6954974, 0, -1.6594616)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rc12h"]
+_data = {
+&"RESET": SubResource("Animation_xghp4"),
+&"use tool": SubResource("Animation_n58ld")
+}
+
+[node name="ProtoController" type="CharacterBody3D" unique_id=1141446635]
+script = ExtResource("1_8aouf")
+
+[node name="Mesh" type="MeshInstance3D" parent="." unique_id=903769193]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+material_override = SubResource("StandardMaterial3D_iof21")
+cast_shadow = 0
+mesh = SubResource("CapsuleMesh_ucva2")
+
+[node name="Collider" type="CollisionShape3D" parent="." unique_id=1979464251]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_iof21")
+
+[node name="Head" type="Node3D" parent="." unique_id=468047557]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+script = ExtResource("2_xghp4")
+
+[node name="Camera3D" type="Camera3D" parent="Head" unique_id=1066582919]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.29087758, 0)
+
+[node name="RayCast3D" type="RayCast3D" parent="Head/Camera3D" unique_id=1732544353]
+target_position = Vector3(0, 0, -4)
+
+[node name="hand" type="Node3D" parent="Head" unique_id=602400664]
+transform = Transform3D(0.83776605, -0.5337689, 0.11506152, 0.28888458, 0.6120959, 0.7361279, -0.46335095, -0.58346355, 0.6669904, 0.6954974, 0, -1.6594616)
+script = ExtResource("3_n58ld")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=273825486]
+replication_config = SubResource("SceneReplicationConfig_g2uji")
+
+[node name="CanvasGroup" type="CanvasLayer" parent="." unique_id=785241693]
+
+[node name="ColorRect" type="ColorRect" parent="CanvasGroup" unique_id=221683389]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -5.0
+offset_top = -5.0
+offset_right = 5.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1499006308]
+libraries/ = SubResource("AnimationLibrary_rc12h")
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

@@ -19,6 +19,7 @@ func _ready():
 	
 	
 	
+	
 func _on_host_created():
 	spawnOrder = currentSpawn
 	currentSpawn += 1
@@ -70,21 +71,15 @@ func spawn_player(peer_id:int):
 		player.get_node("Head").get_child(0).current = true
 	$players.add_child(player)
 	initialize_player(player)
-	player.shoot_requested.connect(_on_player_shoot_requested)
+
+
+func _physics_process(delta: float) -> void:
+	if !multiplayer.is_server():
+		return
 	
 	
-func _on_player_shoot_requested(playerTransform: Transform3D, cameraTransform: Transform3D, peer_id: int):
-	spawn_bullet_everywhere.rpc(playerTransform, cameraTransform, peer_id)
-	print('bullet')
-	
-@rpc("authority","call_local","reliable")
-func spawn_bullet_everywhere(playerTransform: Transform3D, cameraTransform: Transform3D, peer_id: int) -> void:
-	var bullet = preload("res://Scenes/bullet.tscn").instantiate()
-	bullet.set_multiplayer_authority(1)
-	bullet.global_transform = playerTransform
-	bullet.id = peer_id
-	$bullets.add_child(bullet)
-	var direction = -playerTransform.basis.z
-	direction.y = -cameraTransform.basis.z.y
-	direction = direction.normalized()
-	bullet.apply_central_impulse(direction * 100)
+
+
+func _on_repair_timer_timeout() -> void:
+	EventBus.repairNode = "brakeSystem"
+	EventBus.needRepairs.emit()
