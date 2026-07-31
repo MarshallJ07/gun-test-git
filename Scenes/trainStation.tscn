@@ -51,6 +51,17 @@ data = PackedVector3Array(-20, 0.5, 10, 20, 0.5, 10, -20, -0.5, 10, 20, 0.5, 10,
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_ctlry"]
 data = PackedVector3Array(-20, 0.5, 10, 20, 0.5, 10, -20, -0.5, 10, 20, 0.5, 10, 20, -0.5, 10, -20, -0.5, 10, 20, 0.5, -10, -20, 0.5, -10, 20, -0.5, -10, -20, 0.5, -10, -20, -0.5, -10, 20, -0.5, -10, 20, 0.5, 10, 20, 0.5, -10, 20, -0.5, 10, 20, 0.5, -10, 20, -0.5, -10, 20, -0.5, 10, -20, 0.5, -10, -20, 0.5, 10, -20, -0.5, -10, -20, 0.5, 10, -20, -0.5, 10, -20, -0.5, -10, 20, 0.5, 10, -20, 0.5, 10, 20, 0.5, -10, -20, 0.5, 10, -20, 0.5, -10, 20, 0.5, -10, -20, -0.5, 10, 20, -0.5, 10, -20, -0.5, -10, 20, -0.5, 10, 20, -0.5, -10, -20, -0.5, -10)
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_qxk1l"]
+properties/0/path = NodePath("Sketchfab_model/double track_obj_cleaner_materialmerger_gles:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("AnimatableBody3D:position")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:visible")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
 [node name="background" unique_id=1737607567 instance=ExtResource("1_qxk1l")]
 script = ExtResource("2_u61dw")
 
@@ -126,3 +137,6 @@ shape = SubResource("ConcavePolygonShape3D_of3f3")
 [node name="CollisionShape3D10" type="CollisionShape3D" parent="AnimatableBody3D" index="9" unique_id=380011769]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -293.17102, -27.705853, 10.186436)
 shape = SubResource("ConcavePolygonShape3D_ctlry")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." index="2" unique_id=1517734055]
+replication_config = SubResource("SceneReplicationConfig_qxk1l")
