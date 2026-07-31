@@ -3,7 +3,7 @@ extends Node3D
 var holding: RigidBody3D
 var holding_is_tool: bool = false 
 
-var throw_power: float = 15.0 
+var throw_power: float = 30.0 
 
 @onready var root: CharacterBody3D = $".."
 @onready var cam: Camera3D = $Camera3D

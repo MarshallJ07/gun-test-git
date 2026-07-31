@@ -19,6 +19,8 @@ properties/1/spawn = true
 properties/1/replication_mode = 1
 
 [node name="coal" type="RigidBody3D" unique_id=2096634230 groups=["coal", "item"]]
+mass = 100.0
+continuous_cd = true
 script = ExtResource("1_x6f8n")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=826965931]
