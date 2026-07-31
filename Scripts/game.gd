@@ -32,10 +32,10 @@ func _reload_stats() -> void:
 @rpc("any_peer","call_local","reliable")
 func set_screen(speed,fuel,nextStation,distance) -> void:
 	screen.get_child(0).text = (
-		"Speed: " + str(round(EventBus.speed*10)/10) + "Km/h\n
-		Boiler fuel: " + str(round(EventBus.fuel*10)/10) + "L\n
-		Next Station: " + str(round(EventBus.nextStation*10)/10) + "Km\n
-		Distance: " + str(round(EventBus.distance*10)/10) + "Km\n"
+		"Speed: " + str(round(speed*10)/10) + "Km/h\n
+		Boiler fuel: " + str(round(fuel*10)/10) + "L\n
+		Next Station: " + str(round(nextStation*10)/10) + "Km\n
+		Distance: " + str(round(distance*10)/10) + "Km\n"
 	)
 
 
