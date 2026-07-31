@@ -67,6 +67,15 @@ properties/3/replication_mode = 1
 properties/4/path = NodePath(".:rotation")
 properties/4/spawn = true
 properties/4/replication_mode = 1
+properties/5/path = NodePath("Sketchfab_model:rotation")
+properties/5/spawn = true
+properties/5/replication_mode = 1
+properties/6/path = NodePath("Sketchfab_model/double track_obj_cleaner_materialmerger_gles:rotation")
+properties/6/spawn = true
+properties/6/replication_mode = 1
+properties/7/path = NodePath("AnimatableBody3D:rotation")
+properties/7/spawn = true
+properties/7/replication_mode = 1
 
 [node name="background" unique_id=1737607567 instance=ExtResource("1_qxk1l")]
 script = ExtResource("2_u61dw")
