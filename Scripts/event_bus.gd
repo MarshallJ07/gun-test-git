@@ -29,7 +29,8 @@ var stats = {
 	}
 	
 func _physics_process(delta: float) -> void:
-	
+	if !multiplayer.is_server():
+		return
 	if !atStation:
 		
 		fuel = max(0.0, fuel - ((speed / 50.0) + 0.01) * delta)
