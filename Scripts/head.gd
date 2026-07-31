@@ -1,18 +1,36 @@
 extends Node3D
 
 var holding: RigidBody3D
-var holding_is_tool: bool = false # Tracks if the currently held item is a tool
+var holding_is_tool: bool = false 
 
-var pull_power: float = 15.0 # Speed it snaps to your hand's position
-var rotate_power: float = 15.0 # Speed it snaps to your hand's rotation
-var throw_power: float = 15.0 # Strength of the throw
+var throw_power: float = 15.0 
+# pull_power and rotate_power removed because frozen RigidBody3Ds ignore physics velocities.
 
 @onready var root: CharacterBody3D = $".."
 @onready var cam: Camera3D = $Camera3D
 @onready var raycast: RayCast3D = $Camera3D/RayCast3D
 @onready var hand: Node3D = $hand
 
+
+
+
 func _physics_process(delta: float) -> void:
+	
+	if Input.is_action_just_pressed("Interact"):
+		if raycast.is_colliding():
+			var object = raycast.get_collider()
+			if object.is_in_group("button"):
+				if object.name == "up":
+					EventBus.targetSpeed += 25
+					EventBus.atStation = false
+					if EventBus.targetSpeed > EventBus.maxSpeed:
+						EventBus.targetSpeed = EventBus.maxSpeed
+					EventBus.statChange.emit()
+				elif object.name == "down":
+					EventBus.targetSpeed -= 25
+					if EventBus.targetSpeed < 0:
+						EventBus.targetSpeed = 0
+					EventBus.statChange.emit()
 	
 	# 1. Pick up the item
 	if Input.is_action_just_pressed("pickup") and holding == null:
@@ -28,19 +46,20 @@ func _physics_process(delta: float) -> void:
 				else:
 					holding_is_tool = false
 				
-				# Call the RPC to tell ALL players (and the host) to update this item
-				rpc("update_item_network_state", holding.get_path(), multiplayer.get_unique_id(), holding_is_tool)
+				# Pass `true` as the should_freeze argument so ALL items freeze when held
+				rpc("update_item_network_state", holding.get_path(), multiplayer.get_unique_id(), true, Vector3.ZERO)
 
 	# 2. Throw the item
 	elif Input.is_action_just_pressed("throw") and holding != null:
 		if holding_is_tool:
 			root.hasTool = false
 			
+		# Calculate the throw velocity
 		var throw_direction = -cam.global_basis.z.normalized()
-		holding.linear_velocity = throw_direction * throw_power
+		var throw_vel = throw_direction * throw_power
 		
-		# Tell all players to return authority to Host (1) and unfreeze it
-		rpc("update_item_network_state", holding.get_path(), 1, false)
+		# Send the velocity TO the server and unfreeze it (`false`)
+		rpc("update_item_network_state", holding.get_path(), 1, false, throw_vel)
 		holding = null
 		
 	# 3. Drop the item
@@ -48,54 +67,30 @@ func _physics_process(delta: float) -> void:
 		if holding_is_tool:
 			root.hasTool = false
 			
-		holding.linear_velocity = Vector3(0, 3, 0)
+		# Calculate the drop velocity
+		var drop_vel = Vector3(0, 3, 0)
 		
-		# Tell all players to return authority to Host (1) and unfreeze it
-		rpc("update_item_network_state", holding.get_path(), 1, false)
+		# Send the drop velocity TO the server and unfreeze it (`false`)
+		rpc("update_item_network_state", holding.get_path(), 1, false, drop_vel)
 		holding = null
 
-	# 4. Hold and move (Executes every frame we are holding something)
+	# 4. Hold and move
 	if holding != null:
-		
-		# If it's a tool, bypass physics entirely and snap perfectly to the hand
-		if holding_is_tool:
-			holding.global_transform = hand.global_transform
-			
-		# If it's a regular physics item, use the rubber-band momentum physics
-		else:
-			# --- Position Physics ---
-			var target_pos = hand.global_position
-			var current_pos = holding.global_position
-			var distance = target_pos - current_pos
-			
-			holding.linear_velocity = distance * pull_power
-			
-			# --- Rotation Physics ---
-			var target_quat = hand.global_basis.get_rotation_quaternion()
-			var current_quat = holding.global_basis.get_rotation_quaternion()
-			
-			var diff_quat = target_quat * current_quat.inverse()
-			var angle = diff_quat.get_angle()
-			
-			if angle > 0.001:
-				var axis = diff_quat.get_axis()
-				holding.angular_velocity = axis * angle * rotate_power
-			else:
-				holding.angular_velocity = Vector3.ZERO
+		# Because the item is now frozen, it cannot be moved using velocity.
+		# We snap ALL held items directly to the hand's position and rotation.
+		holding.global_transform = hand.global_transform
 
 
 # --- NETWORK SYNCHRONIZATION ---
 
-# "any_peer" allows clients to call this on the server.
-# "call_local" ensures the person who triggered it also runs the code.
-# "reliable" ensures the packet doesn't get dropped.
 @rpc("any_peer", "call_local", "reliable")
-func update_item_network_state(item_path: NodePath, new_authority_id: int, should_freeze: bool):
-	# Safely get the item using its path in the scene tree
+func update_item_network_state(item_path: NodePath, new_authority_id: int, should_freeze: bool, new_velocity: Vector3):
 	var item = get_node_or_null(item_path)
 	
 	if item and item is RigidBody3D:
-		# Now everyone universally agrees who owns it
 		item.set_multiplayer_authority(new_authority_id)
-		# And everyone universally agrees if physics are turned off for it
 		item.freeze = should_freeze
+		
+		# Universally apply the velocity at the exact moment authority changes
+		if new_velocity != Vector3.ZERO:
+			item.linear_velocity = new_velocity

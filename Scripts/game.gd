@@ -7,8 +7,14 @@ var spawnOrder: int
 var currentSpawn: int = 0
 
 
+@onready var screen: Control = $train/SubViewport/screen
 
-
+var fixables = [
+	"brakeSystem",
+	"generator",
+	"waterPump",
+	"boiler",
+]
 
 var ids = []
 
@@ -16,9 +22,34 @@ func _ready():
 	Networking.host_created.connect(_on_host_created)
 	multiplayer.peer_connected.connect(_peer_connected)
 	
+	set_screen("speed",EventBus.speed)
+	set_screen("fuel",EventBus.fuel)
+	set_screen("next station",EventBus.nextStation)
+	set_screen("distance",EventBus.distance)
 	
+	EventBus.statChange.connect(_reload_stats)
 	
+func _reload_stats() -> void:
+	set_screen("",null,false)
 	
+func set_screen(stat:String="", value=null, reload:bool = true) -> void:
+	if reload:
+		EventBus.stats[stat] = str(value)
+	else:
+		EventBus.stats = {
+		"speed":str(round(EventBus.speed*10)/10),
+		"fuel":str(round(EventBus.fuel*10)/10),
+		"next station":str(round(EventBus.nextStation*10)/10),
+		"distance":str(round(EventBus.distance*10)/10)
+	}
+	screen.get_child(0).text = (
+		"Speed: " + EventBus.stats["speed"] + "Km/h\n
+		Boiler fuel: " + EventBus.stats["fuel"] + "L\n
+		Next Station: " + EventBus.stats["next station"] + "Km\n
+		Distance: " + EventBus.stats["distance"] + "Km\n"
+	)
+
+
 	
 func _on_host_created():
 	spawnOrder = currentSpawn
@@ -81,5 +112,6 @@ func _physics_process(delta: float) -> void:
 
 
 func _on_repair_timer_timeout() -> void:
-	EventBus.repairNode = "brakeSystem"
+	
+	EventBus.repairNode = fixables[randi() % fixables.size()]
 	EventBus.needRepairs.emit()

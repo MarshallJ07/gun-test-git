@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://dd2toln3i8ui5"]
+
+[ext_resource type="Script" uid="uid://cfxrvhqnycuic" path="res://Scripts/event_bus.gd" id="1_2ouvv"]
+
+[sub_resource type="Curve" id="Curve_nntw3"]
+_data = [Vector2(0.016326532, 1), 0.0, -2.8445697, 0, 0, Vector2(0.9959183, 0.022471905), 0.059843678, 0.0, 0, 0]
+point_count = 2
+
+[node name="EventBus" type="Node" unique_id=1502188296]
+script = ExtResource("1_2ouvv")
+fuel_power_curve = SubResource("Curve_nntw3")

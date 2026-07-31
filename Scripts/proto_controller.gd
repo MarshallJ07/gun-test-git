@@ -1,12 +1,9 @@
-# ProtoController v1.0 by Brackeys
+# ProtoController v1.0 by Brackeys (Train/Moving Platform Relativity Fix)
 # CC0 License
 # Intended for rapid prototyping of first-person games.
 # Happy prototyping!
 
 extends CharacterBody3D
-
-
-
 
 ## Can we move around?
 @export var can_move : bool = true
@@ -17,7 +14,7 @@ extends CharacterBody3D
 ## Can we hold to run?
 @export var can_sprint : bool = false
 ## Can we press to enter freefly mode (noclip)?
-@export var can_freefly : bool = false
+@export var can_freefly : bool = true
 
 @export var can_shoot : bool = true
 
@@ -25,13 +22,13 @@ extends CharacterBody3D
 ## Look around rotation speed.
 @export var look_speed : float = 0.002
 ## Normal speed.
-@export var base_speed : float = 7.0
+@export var base_speed : float = 12.0
 ## Speed of jump.
-@export var jump_velocity : float = 4.5
+@export var jump_velocity : float = 5.5
 ## How fast do we run?
 @export var sprint_speed : float = 10.0
 ## How fast do we freefly?
-@export var freefly_speed : float = 25.0
+@export var freefly_speed : float = 200.0
 
 @export_group("Input Actions")
 ## Name of Input Action to move Left.
@@ -54,6 +51,13 @@ var look_rotation : Vector2
 var move_speed : float = 0.0
 var freeflying : bool = false
 var hasTool := false
+
+# --- NEW: Reference Frame Variables ---
+# local_velocity strictly tracks our input (walking/jumping)
+var local_velocity := Vector3.ZERO
+# platform_inertia safely stores the train's speed when we jump/fall
+var platform_inertia := Vector3.ZERO 
+
 ## IMPORTANT REFERENCES
 @onready var head: Node3D = $Head
 @onready var collider: CollisionShape3D = $Collider
@@ -66,86 +70,112 @@ func _ready() -> void:
 	look_rotation.y = rotation.y
 	look_rotation.x = head.rotation.x
 	
+	# IMPORTANT: We disable Godot's built-in platform velocity addition on leave, 
+	# because we are now perfectly maintaining the train's reference frame ourselves mid-air.
+	platform_on_leave = PLATFORM_ON_LEAVE_DO_NOTHING
 	
 	
 func _tool_change() -> void:
 	pass
 
 func _unhandled_input(event: InputEvent) -> void:
-	# Mouse capturing
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 		capture_mouse()
 	if Input.is_key_pressed(KEY_ESCAPE):
 		release_mouse()
 	
-	# Look around
 	if mouse_captured and event is InputEventMouseMotion:
 		rotate_look(event.relative)
 	
-	# Toggle freefly mode
 	if can_freefly and Input.is_action_just_pressed(input_freefly):
 		if not freeflying:
 			enable_freefly()
 		else:
 			disable_freefly()
 
+
 func _physics_process(delta: float) -> void:
 	if !is_multiplayer_authority():
 		return
-	# If freeflying, handle freefly and nothing else
+		
+	# Handle freefly
 	if can_freefly and freeflying:
 		var input_dir := Input.get_vector(input_left, input_right, input_forward, input_back)
 		var motion := (head.global_basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-		motion *= freefly_speed * delta
-		move_and_collide(motion)
+		velocity = motion * freefly_speed
+		move_and_slide()
 		return
+
+	if hasTool and Input.is_action_just_pressed("Interact"):
+		animation.play("use tool")
+
+	# Get inputs
+	var input_dir := Input.get_vector(input_left, input_right, input_forward, input_back)
+	var move_dir := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
-	# Apply gravity to velocity
-	if has_gravity:
-		if not is_on_floor():
-			velocity += get_gravity() * delta
-
-	if hasTool:
-		if Input.is_action_just_pressed("Interact"):
-			animation.play("use tool")
-			
-					
-			
-
-	# Apply jumping
-	if can_jump:
-		if Input.is_action_just_pressed(input_jump) and is_on_floor():
-			velocity.y = jump_velocity
-	# Modify speed based on sprinting
 	if can_sprint and Input.is_action_pressed(input_sprint):
-			move_speed = sprint_speed
-	
-	
-			
+		move_speed = sprint_speed
 	else:
 		move_speed = base_speed
 
-	# Apply desired movement to velocity
-	if can_move:
-		var input_dir := Input.get_vector(input_left, input_right, input_forward, input_back)
-		var move_dir := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-		if move_dir:
-			velocity.x = move_dir.x * move_speed
-			velocity.z = move_dir.z * move_speed
+	# --- MOVEMENT LOGIC ---
+	if is_on_floor():
+		# 1. Update our reference frame to match the moving train exactly
+		platform_inertia = get_platform_velocity()
+
+		# 2. Handle ground movement (This modifies local_velocity ONLY)
+		if can_move:
+			if move_dir:
+				local_velocity.x = move_dir.x * move_speed
+				local_velocity.z = move_dir.z * move_speed
+			else:
+				local_velocity.x = move_toward(local_velocity.x, 0, move_speed)
+				local_velocity.z = move_toward(local_velocity.z, 0, move_speed)
 		else:
-			velocity.x = move_toward(velocity.x, 0, move_speed)
-			velocity.z = move_toward(velocity.z, 0, move_speed)
+			local_velocity.x = 0
+			local_velocity.z = 0
+
+		# 3. Jump (Applies to our local space)
+		if can_jump and Input.is_action_just_pressed(input_jump):
+			local_velocity.y = jump_velocity
+
+		# When on the ground, Godot natively adds the platform's speed during move_and_slide().
+		# We ONLY pass it our relative movement.
+		velocity = local_velocity
+
 	else:
-		velocity.x = 0
-		velocity.y = 0
-	
-	# Use velocity to actually move
+		# 1. Apply Gravity
+		if has_gravity:
+			local_velocity += get_gravity() * delta
+			
+		# 2. Apply Air steering & friction to our local velocity
+		if can_move:
+			if move_dir:
+				var target_x = move_dir.x * move_speed
+				var target_z = move_dir.z * move_speed
+				local_velocity.x = move_toward(local_velocity.x, target_x, move_speed * delta * 2.0)
+				local_velocity.z = move_toward(local_velocity.z, target_z, move_speed * delta * 2.0)
+			else:
+				local_velocity.x = move_toward(local_velocity.x, 0, base_speed * delta * 1.0)
+				local_velocity.z = move_toward(local_velocity.z, 0, base_speed * delta * 1.0)
+
+		# In the air, we detach from the ground. We MUST manually add the train's inertia 
+		# so we don't fall backward while in mid-air.
+		velocity = local_velocity + platform_inertia
+
+	# Perform the actual move
 	move_and_slide()
+
+	# --- CLEANUP POST-MOVE ---
+	# Update local_velocity based on collision results (e.g., hitting a wall)
+	if is_on_floor():
+		local_velocity = velocity 
+	else:
+		# Extract the train's inertia back out so our internal calculations stay perfectly relative
+		local_velocity = velocity - platform_inertia
 
 
 ## Rotate us to look around.
-## Base of controller rotates around y (left/right). Head rotates around x (up/down).
-## Modifies look_rotation based on rot_input, then resets basis and rotates by look_rotation.
 func rotate_look(rot_input : Vector2):
 	look_rotation.x -= rot_input.y * look_speed
 	look_rotation.x = clamp(look_rotation.x, deg_to_rad(-85), deg_to_rad(85))
@@ -154,7 +184,6 @@ func rotate_look(rot_input : Vector2):
 	rotate_y(look_rotation.y)
 	head.transform.basis = Basis()
 	head.rotate_x(look_rotation.x)
-
 
 func enable_freefly():
 	collider.disabled = true
@@ -165,19 +194,15 @@ func disable_freefly():
 	collider.disabled = false
 	freeflying = false
 
-
 func capture_mouse():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	mouse_captured = true
-
 
 func release_mouse():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	mouse_captured = false
 
-
 ## Checks if some Input Actions haven't been created.
-## Disables functionality accordingly.
 func check_input_mappings():
 	if can_move and not InputMap.has_action(input_left):
 		push_error("Movement disabled. No InputAction found for input_left: " + input_left)
@@ -200,15 +225,9 @@ func check_input_mappings():
 	if can_freefly and not InputMap.has_action(input_freefly):
 		push_error("Freefly disabled. No InputAction found for input_freefly: " + input_freefly)
 		can_freefly = false
-		
-
-	
-
-	
-
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "use tool":
 		if raycast.is_colliding():
 			var object = raycast.get_collider()
-			EventBus.repairing.emit(object,10)
+			EventBus.repairing.emit(object, 10)

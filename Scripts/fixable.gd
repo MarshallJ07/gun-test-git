@@ -15,9 +15,12 @@ func _need_repairs() -> void:
 	if EventBus.repairNode == str(name):
 		particles.emitting = true
 		
-		healthBar.value = 50
+		healthBar.value -= 10
 		particles.amount_ratio = 100/healthBar.value - 1
 
+func _physics_process(delta: float) -> void:
+	if healthBar.value < 100:
+		healthBar.value -= delta
 
 func _repairing(object, dmg:float) -> void:
 	if object != self:
