@@ -11,8 +11,19 @@ var throw_power: float = 15.0
 @onready var raycast: RayCast3D = $Camera3D/RayCast3D
 @onready var hand: Node3D = $hand
 
-
-
+@rpc("any_peer","call_local","reliable")
+func speed_change(object) -> void:
+	if object.name == "up":
+		EventBus.targetSpeed += 25
+		EventBus.atStation = false
+		if EventBus.targetSpeed > EventBus.maxSpeed:
+			EventBus.targetSpeed = EventBus.maxSpeed
+		EventBus.statChange.emit()
+	elif object.name == "down":
+		EventBus.targetSpeed -= 25
+		if EventBus.targetSpeed < 0:
+			EventBus.targetSpeed = 0
+		EventBus.statChange.emit()
 
 func _physics_process(delta: float) -> void:
 	
@@ -20,17 +31,7 @@ func _physics_process(delta: float) -> void:
 		if raycast.is_colliding():
 			var object = raycast.get_collider()
 			if object.is_in_group("button"):
-				if object.name == "up":
-					EventBus.targetSpeed += 25
-					EventBus.atStation = false
-					if EventBus.targetSpeed > EventBus.maxSpeed:
-						EventBus.targetSpeed = EventBus.maxSpeed
-					EventBus.statChange.emit()
-				elif object.name == "down":
-					EventBus.targetSpeed -= 25
-					if EventBus.targetSpeed < 0:
-						EventBus.targetSpeed = 0
-					EventBus.statChange.emit()
+				speed_change.rpc(object)
 	
 	# 1. Pick up the item
 	if Input.is_action_just_pressed("pickup") and holding == null:

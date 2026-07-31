@@ -38,23 +38,6 @@ size = Vector3(2, 0.5, 2)
 [sub_resource type="ViewportTexture" id="ViewportTexture_o5yvi"]
 viewport_path = NodePath("train/SubViewport")
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_rfjv2"]
-properties/0/path = NodePath("background:position")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-properties/1/path = NodePath("background2:position")
-properties/1/spawn = true
-properties/1/replication_mode = 1
-properties/2/path = NodePath("background3:position")
-properties/2/spawn = true
-properties/2/replication_mode = 1
-properties/3/path = NodePath("background4:position")
-properties/3/spawn = true
-properties/3/replication_mode = 1
-properties/4/path = NodePath("station:position")
-properties/4/spawn = true
-properties/4/replication_mode = 1
-
 [node name="game" type="Node3D" unique_id=1293817836]
 script = ExtResource("1_ebmjs")
 
@@ -293,9 +276,6 @@ leader = NodePath("../background3")
 
 [node name="station" parent="backgrounds" unique_id=757108128 instance=ExtResource("13_rfjv2")]
 visible = false
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="backgrounds" unique_id=1362743339]
-replication_config = SubResource("SceneReplicationConfig_rfjv2")
 
 [connection signal="pressed" from="CanvasLayer/host" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/start" to="." method="_on_start_pressed"]
