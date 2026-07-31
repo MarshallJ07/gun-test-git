@@ -43,7 +43,6 @@ func _physics_process(delta: float) -> void:
 		
 		nextStation = initStationDistance - distance
 		if nextStation < 0.4 and !approachingStation:
-			print('atstation  ',nextStation, 'dist  ',distance,'init  ',initStationDistance)
 			trainStation.emit()
 			approachingStation = true
 	
