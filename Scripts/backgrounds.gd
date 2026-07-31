@@ -24,6 +24,9 @@ func _ready() -> void:
 	EventBus.trainStation.connect(_stop)
 
 func _physics_process(delta):
+	if !multiplayer.is_server():
+		return
+	
 	b1.body.global_position.z += EventBus.speed * delta
 	b1.mesh.global_position.z += EventBus.speed * delta
 	EventBus.distance += EventBus.speed * delta / 3600
