@@ -12,7 +12,7 @@ extends CharacterBody3D
 ## Can we press to jump?
 @export var can_jump : bool = true
 ## Can we hold to run?
-@export var can_sprint : bool = false
+@export var can_sprint : bool = true
 ## Can we press to enter freefly mode (noclip)?
 @export var can_freefly : bool = true
 
@@ -24,9 +24,9 @@ extends CharacterBody3D
 ## Normal speed.
 @export var base_speed : float = 12.0
 ## Speed of jump.
-@export var jump_velocity : float = 5.5
+@export var jump_velocity : float = 12
 ## How fast do we run?
-@export var sprint_speed : float = 10.0
+@export var sprint_speed : float = 18.0
 ## How fast do we freefly?
 @export var freefly_speed : float = 200.0
 

@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cqpusnwnhrhov" path="res://Scenes/coal.tscn" id="4_3dryh"]
 [ext_resource type="Script" uid="uid://51b64ga8ep4t" path="res://Scripts/coal_table.gd" id="4_wowpa"]
 [ext_resource type="PackedScene" uid="uid://cjurrosh7brj5" path="res://Scenes/brakeSystem.tscn" id="6_1l0tm"]
+[ext_resource type="Script" uid="uid://bwrwi3a8erj7p" path="res://Scripts/wrench.gd" id="6_1phco"]
 [ext_resource type="PackedScene" uid="uid://denfl1ro40m70" path="res://Scenes/screen.tscn" id="6_ldgsr"]
 [ext_resource type="PackedScene" uid="uid://y3a8vwt4fpp0" path="res://Scenes/train_front.tscn" id="7_h4fw4"]
 [ext_resource type="PackedScene" uid="uid://dvwpatt2hu4vw" path="res://Scenes/train_middle.tscn" id="8_ldgsr"]
@@ -214,6 +215,7 @@ transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.28
 
 [node name="wrench" parent="train" unique_id=1254248989 instance=ExtResource("3_wrm1d")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.978178, 5.670975, 16.64927)
+script = ExtResource("6_1phco")
 
 [node name="SubViewport" type="SubViewport" parent="train" unique_id=1355750841]
 disable_3d = true

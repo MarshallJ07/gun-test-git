@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://cqpusnwnhrhov"]
 
+[ext_resource type="Script" uid="uid://cy74y4rb5kcub" path="res://Scripts/coal.gd" id="1_x6f8n"]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4v3ac"]
 albedo_color = Color(0, 0, 0, 1)
 
@@ -17,6 +19,7 @@ properties/1/spawn = true
 properties/1/replication_mode = 1
 
 [node name="coal" type="RigidBody3D" unique_id=2096634230 groups=["coal", "item"]]
+script = ExtResource("1_x6f8n")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=826965931]
 mesh = SubResource("SphereMesh_x6f8n")
