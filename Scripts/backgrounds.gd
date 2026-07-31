@@ -143,7 +143,6 @@ func _physics_process(delta):
 	
 func _stop() -> void:
 	stopTrain = true
-	print('STOP')
 	station.show()
 	if phase == 2:
 		b1.name = "stationRoot"
